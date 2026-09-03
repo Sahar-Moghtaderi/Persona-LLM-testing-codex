@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funktionaler Testreport — {{TESTPLAN}} — {{DATUM}}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; padding: 2rem; }
+    .container { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .subtitle { color: #666; margin-bottom: 2rem; }
+
+    /* Summary Cards */
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #888; margin-bottom: 0.25rem; }
+    .card-value { font-size: 1.8rem; font-weight: 700; }
+    .card-value.pass { color: #16a34a; }
+    .card-value.fail { color: #dc2626; }
+    .card-value.neutral { color: #1a1a1a; }
+
+    /* Progress Bar */
+    .progress-bar { background: #e5e7eb; border-radius: 999px; height: 12px; overflow: hidden; margin-bottom: 2rem; }
+    .progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #16a34a, #22c55e); transition: width 0.5s ease; }
+
+    /* Test Groups */
+    .test-group { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1rem; overflow: hidden; }
+    .test-group-header { padding: 1rem 1.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .test-group-header:hover { background: #fafafa; }
+    .test-group-header h2 { font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .test-group-badge { font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-weight: 600; }
+    .badge-pass { background: #dcfce7; color: #16a34a; }
+    .badge-fail { background: #fef2f2; color: #dc2626; }
+    .chevron { transition: transform 0.2s ease; font-size: 1.2rem; color: #999; }
+    .chevron.open { transform: rotate(180deg); }
+
+    /* Test Steps */
+    .test-steps { display: none; border-top: 1px solid #f0f0f0; }
+    .test-steps.open { display: block; }
+    .step { padding: 0.75rem 1.5rem; display: grid; grid-template-columns: 2.5rem 1fr 2rem; align-items: start; gap: 0.75rem; border-bottom: 1px solid #f8f8f8; }
+    .step:last-child { border-bottom: none; }
+    .step-num { font-weight: 600; color: #888; font-size: 0.85rem; padding-top: 0.1rem; }
+    .step-content { font-size: 0.9rem; }
+    .step-expected { color: #666; font-size: 0.8rem; margin-top: 0.25rem; }
+    .step-actual-fail { color: #dc2626; font-size: 0.8rem; margin-top: 0.25rem; font-weight: 500; }
+    .step-icon { font-size: 1.1rem; padding-top: 0.1rem; }
+    .step-screenshot { margin-top: 0.5rem; }
+    .step-screenshot a { color: #2563eb; font-size: 0.8rem; text-decoration: none; }
+    .step-screenshot a:hover { text-decoration: underline; }
+
+    /* Meta Info */
+    .meta { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .meta-item { }
+    .meta-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #888; }
+    .meta-value { font-size: 0.95rem; font-weight: 500; }
+
+    /* Filter */
+    .filters { margin-bottom: 1.5rem; display: flex; gap: 0.5rem; }
+    .filter-btn { padding: 0.4rem 1rem; border-radius: 999px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 0.85rem; transition: all 0.15s ease; }
+    .filter-btn:hover { border-color: #999; }
+    .filter-btn.active { background: #1a1a1a; color: white; border-color: #1a1a1a; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Funktionaler Testreport</h1>
+    <p class="subtitle">{{TESTPLAN}} — {{DATUM}}</p>
+
+    <div class="meta">
+      <div class="meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">URL</div>
+          <div class="meta-value">{{URL}}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Dauer</div>
+          <div class="meta-value">{{DAUER}}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Playwright-Aktionen</div>
+          <div class="meta-value">{{AKTIONEN}}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Screenshots</div>
+          <div class="meta-value">{{SCREENSHOTS}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="card">
+        <div class="card-label">Gesamt</div>
+        <div class="card-value neutral">{{TOTAL}}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Bestanden</div>
+        <div class="card-value pass">{{PASSED}}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Fehlgeschlagen</div>
+        <div class="card-value fail">{{FAILED}}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Erfolgsrate</div>
+        <div class="card-value neutral">{{RATE}}%</div>
+      </div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: {{RATE}}%"></div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterTests('all')">Alle</button>
+      <button class="filter-btn" onclick="filterTests('fail')">Nur Fehler</button>
+      <button class="filter-btn" onclick="filterTests('pass')">Nur Bestanden</button>
+    </div>
+
+    <!-- TEST CASES START -->
+    <!--
+      Für jeden Testcase diesen Block wiederholen:
+
+      <div class="test-group" data-status="pass|fail">
+        <div class="test-group-header" onclick="toggleGroup(this)">
+          <h2>
+            <span>✅</span> oder <span>❌</span>
+            TC-X: Titel des Testcases
+          </h2>
+          <span class="test-group-badge badge-pass">PASS</span> oder <span class="test-group-badge badge-fail">FAIL</span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="test-steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <div class="step-content">
+              Beschreibung des Schritts
+              <div class="step-expected">Erwartet: ...</div>
+              Falls Fail: <div class="step-actual-fail">Tatsächlich: ...</div>
+              Falls Screenshot: <div class="step-screenshot"><a href="...">📸 Screenshot</a></div>
+            </div>
+            <span class="step-icon">✅</span> oder <span class="step-icon">❌</span>
+          </div>
+        </div>
+      </div>
+    -->
+    <!-- TEST CASES END -->
+
+  </div>
+
+  <script>
+    function toggleGroup(header) {
+      const steps = header.nextElementSibling;
+      const chevron = header.querySelector('.chevron');
+      steps.classList.toggle('open');
+      chevron.classList.toggle('open');
+    }
+
+    function filterTests(status) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.querySelectorAll('.test-group').forEach(group => {
+        if (status === 'all') {
+          group.style.display = '';
+        } else {
+          group.style.display = group.dataset.status === status ? '' : 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "web-frontend-testing",
+  "version": "1.0.0",
+  "description": "Automated web frontend testing with Claude Code and Playwright MCP",
+  "scripts": {
+    "setup": "npx playwright install chromium",
+    "test": "echo 'Öffne Claude Code in diesem Verzeichnis und folge den Anweisungen in README.md'"
+  },
+  "devDependencies": {
+    "@playwright/mcp": "latest"
+  },
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}

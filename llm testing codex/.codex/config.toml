@@ -1,0 +1,34 @@
+# .codex/config.toml — project-scoped MCP config (Codex equivalent of ../.mcp.json)
+#
+# IMPORTANT — trust gate: this file only loads if Codex has marked THIS
+# PROJECT DIRECTORY as trusted. The first time you run `codex` inside this
+# folder, it will prompt you to trust it. Until you accept, the entire
+# .codex/ layer — including the [mcp_servers.playwright] block below — is
+# silently skipped, with no error. Trust is recorded in your global
+# ~/.codex/config.toml as:
+#   [projects."C:\Users\Sahar.Moghtaderi\Documents\llm testing codex"]
+#   trust_level = "trusted"
+#
+# Fallback if it still doesn't show up after trusting: some Codex surfaces
+# (e.g. Codex Desktop, per openai/codex issue #13025) only read the GLOBAL
+# ~/.codex/config.toml and miss project-scoped MCP servers. If
+# `codex mcp list` doesn't show "playwright" after trusting this project,
+# paste this identical [mcp_servers.playwright] block into
+# ~/.codex/config.toml instead — it always loads, at the cost of no longer
+# being project-portable via git the way this file is.
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest"]
+
+# --- Optional keys (not needed for this server; kept here for reference) ---
+# cwd = "."                              # working dir for the server process
+# startup_timeout_sec = 10               # default 10s
+# tool_timeout_sec = 60                  # default 60s
+# enabled = true                         # flip false to disable without deleting
+# default_tools_approval_mode = "auto"   # "auto" | "prompt" | "writes" | "approve"
+# enabled_tools = ["browser_navigate"]   # allow-list of tool names
+# disabled_tools = []                    # deny-list of tool names
+# env_vars = ["SOME_VAR_TO_FORWARD"]     # forward from Codex's own process env
+# [mcp_servers.playwright.env]           # keys below MUST come after all the
+# SOME_VAR = "some_value"                # plain keys above (TOML sub-table rule)
